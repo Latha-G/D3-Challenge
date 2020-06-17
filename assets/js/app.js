@@ -22,8 +22,6 @@ var svg = d3.select("#scatter")
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-  var radiusText = [];
-
 // Retrieve data from the CSV file and execute everything below
 d3.csv("assets/data/data.csv").then(function(povertyData, err) {
 
@@ -44,11 +42,7 @@ d3.csv("assets/data/data.csv").then(function(povertyData, err) {
         data.income = +data.income;
         data.obesity = +data.obesity;
 
-        radiusText.push(data.abbr);
-     
-
-      });
-      console.log(radiusText);
+    });
   
     // Step 2: Create scale functions
     // ==============================
@@ -86,7 +80,7 @@ d3.csv("assets/data/data.csv").then(function(povertyData, err) {
     .attr("class", "d3-tip")
     .offset([-8, 0])
     .html(function(d) {
-    return (`<br><strong>${d.state}</strong><hr>Poverty: ${d.poverty}<br><br>Healthcare: ${d.healthcare}`);
+            return (`<strong>${d.state}</strong><hr>Poverty: ${d.poverty}<br><br>Healthcare: ${d.healthcare}`);
     }); 
 
     
@@ -103,20 +97,21 @@ d3.csv("assets/data/data.csv").then(function(povertyData, err) {
     circlesGroup.append("circle")
                 .attr("cx", d => xLinearScale(d.poverty))
                 .attr("cy", d => yLinearScale(d.healthcare))
-                .attr("r", d => d.poverty)
-                .style("fill", "violet")
+                .attr("r", 12)
+                .style("fill", "darkviolet")
                 .style("stroke", "black")
-                .attr("opacity", ".8")
+                .attr("opacity", ".6")
                 .on('mouseover', toolTip.show)
                 .on('mouseout', toolTip.hide);
     
     // Step 8: Add text to circles
     // ==============================
     circlesGroup.insert("text")
-                .text(d=>d.abbr)
-                .attr("x",d => (xLinearScale(d.poverty)-6))
-                .attr("y",d => (yLinearScale(d.healthcare)+4))
-                .attr('font-size',10)//font size;
+                .text(d => d.abbr)
+                .attr("class", "circleText")
+                .attr("x", d => (xLinearScale(d.poverty)-6) )
+                .attr("y", d => (yLinearScale(d.healthcare)+4) )
+                .attr('font-size',10);
 
     // Step 9: Create axes labels
     // ==============================
